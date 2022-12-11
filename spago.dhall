@@ -16,12 +16,18 @@ to generate this file without the comments in this block.
   , "console"
   , "debug"
   , "effect"
+  , "either"
   , "integers"
   , "lists"
   , "maybe"
+  , "node-buffer"
+  , "node-fs"
   , "node-process"
+  , "parsing"
+  , "partial"
   , "prelude"
   , "strings"
+  , "stringutils"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]

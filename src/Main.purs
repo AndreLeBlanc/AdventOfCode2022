@@ -8,6 +8,7 @@ import Data.Array as Array
 import Data.Int as Int
 import Effect.Console (log)
 import Node.Process (argv)
+import Day1 as Day1
 
 type Year = Int
 type Day = Int
@@ -36,7 +37,8 @@ runCommand args =
     let commandArgs = Array.drop 2 args
     command <- parseArgs commandArgs
     pure case command of
-      (Advent 2022 10 First) -> "2022101"
+      (Advent 2022 10 First) -> Day1.part1
+      (Advent 2022 10 Second) -> Day1.part2
       (Advent 2022 10 NoPart) -> "nada"
       _ -> "Didn't find instance of command"
     # fromMaybe "couldn't parse command"
