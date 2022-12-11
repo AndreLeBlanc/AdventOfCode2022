@@ -31,8 +31,7 @@ part1 =
     readP1 =
       do
         inputs <- getInput
-        let partOne = (Array.foldl max 0 inputs)
-        pure partOne
+        pure (Array.foldl max 0 inputs)
   in
     unsafePerformEffect readP1
       # show
