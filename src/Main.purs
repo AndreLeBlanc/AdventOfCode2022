@@ -2,13 +2,13 @@ module Main where
 
 import Prelude
 
-import Effect (Effect)
-import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Array as Array
 import Data.Int as Int
+import Data.Maybe (Maybe(..), fromMaybe)
+import Day1 as Day1
+import Effect (Effect)
 import Effect.Console (log)
 import Node.Process (argv)
-import Day1 as Day1
 
 type Year = Int
 type Day = Int
@@ -37,9 +37,9 @@ runCommand args =
     let commandArgs = Array.drop 2 args
     command <- parseArgs commandArgs
     pure case command of
-      (Advent 2022 10 First) -> Day1.part1
-      (Advent 2022 10 Second) -> Day1.part2
-      (Advent 2022 10 NoPart) -> "nada"
+      (Advent 2022 1 First) -> Day1.part1
+      (Advent 2022 1 Second) -> Day1.part2
+      (Advent 2022 1 NoPart) -> "part one: " <> Day1.part1 <> ", part two: " <> Day1.part2
       _ -> "Didn't find instance of command"
     # fromMaybe "couldn't parse command"
 
