@@ -6,6 +6,7 @@ import Data.Array as Array
 import Data.Int as Int
 import Data.Maybe (Maybe(..), fromMaybe)
 import Day1 as Day1
+import Day2 as Day2
 import Effect (Effect)
 import Effect.Console (log)
 import Node.Process (argv)
@@ -40,6 +41,9 @@ runCommand args =
       (Advent 2022 1 First) -> Day1.part1
       (Advent 2022 1 Second) -> Day1.part2
       (Advent 2022 1 NoPart) -> "part one: " <> Day1.part1 <> ", part two: " <> Day1.part2
+      (Advent 2022 2 First) -> Day2.part1
+      (Advent 2022 2 Second) -> Day2.part2
+      (Advent 2022 2 NoPart) -> "part one: " <> Day2.part1 <> ", part two: " <> Day2.part2
       _ -> "Didn't find instance of command"
     # fromMaybe "couldn't parse command"
 
