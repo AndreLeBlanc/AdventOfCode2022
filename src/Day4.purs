@@ -4,7 +4,7 @@ import Prelude
 
 import Data.Array as Array
 import Data.Int as Int
-import Data.Maybe (Maybe, fromMaybe)
+import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String as String
 import Data.String.Pattern (Pattern(..))
 import Effect.Unsafe (unsafePerformEffect)
@@ -20,18 +20,18 @@ rowScore part row =
     score :: Array (Maybe Int) -> Maybe Int
     score endPoints =
       do
-        firstStart <- Array.head endPoints
-        firstEnd <- Array.index endPoints 1
-        secondStart <- Array.index endPoints 2
-        secondEnd <- Array.index endPoints 3
-        let
-          res = case part of
-            Part1 ->
-              (firstStart <= secondStart && secondEnd <= firstEnd)
-                || (firstStart >= secondStart && secondEnd >= firstEnd)
-            Part2 ->
-              (firstStart <= secondEnd && secondStart <= firstEnd)
-        pure if res then 1 else 0
+        case endPoints of
+          [ firstStart, firstEnd, secondStart, secondEnd ] ->
+            pure
+              if
+                case part of
+                  Part1 ->
+                    (firstStart <= secondStart && secondEnd <= firstEnd)
+                      || (firstStart >= secondStart && secondEnd >= firstEnd)
+                  Part2 ->
+                    (firstStart <= secondEnd && secondStart <= firstEnd) then 1
+              else 0
+          _ -> Nothing
   in
     row
       # String.split (Pattern ",")
