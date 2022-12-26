@@ -17,6 +17,7 @@ to generate this file without the comments in this block.
   , "debug"
   , "effect"
   , "either"
+  , "foldable-traversable"
   , "integers"
   , "lists"
   , "maybe"
@@ -27,6 +28,7 @@ to generate this file without the comments in this block.
   , "parsing"
   , "partial"
   , "prelude"
+  , "profunctor"
   , "strings"
   , "stringutils"
   ]
