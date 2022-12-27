@@ -10,6 +10,7 @@ import Day2 as Day2
 import Day3 as Day3
 import Day4 as Day4
 import Day5 as Day5
+import Day6 as Day6
 import Effect (Effect)
 import Effect.Console (log)
 import Node.Process (argv)
@@ -56,6 +57,9 @@ runCommand args =
       (Advent 2022 5 First) -> Day5.part1
       (Advent 2022 5 Second) -> Day5.part2
       (Advent 2022 5 NoPart) -> "part one: " <> Day5.part1 <> ", part two: " <> Day5.part2
+      (Advent 2022 6 First) -> Day6.part1
+      (Advent 2022 6 Second) -> Day6.part2
+      (Advent 2022 6 NoPart) -> "part one: " <> Day6.part1 <> ", part two: " <> Day6.part2
       _ -> "Didn't find instance of command"
     # fromMaybe "couldn't parse command"
 

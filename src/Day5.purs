@@ -13,7 +13,6 @@ import Data.String.Utils (lines, toCharArray)
 import Data.Traversable (traverse)
 import Effect (Effect)
 import Effect.Unsafe (unsafePerformEffect)
-import Lib (getInput)
 import Node.Encoding (Encoding(..))
 import Node.FS.Sync (readTextFile)
 
@@ -66,8 +65,8 @@ parseInput path =
     }
       # pure
 
-solveFirst :: Rearrangement -> Boolean -> String
-solveFirst job part2 =
+solve :: Rearrangement -> Boolean -> String
+solve job part2 =
   let
     reversePart2 :: Array String -> Array String
     reversePart2 arr = if part2 then arr else reverse arr
@@ -82,7 +81,7 @@ solveFirst job part2 =
           let giver = splitAt command.num donor
           updatedGiver <- updateAt command.source giver.after job.stacks
           updatedLayout <- updateAt command.destination ((reversePart2 giver.before) <> reciever) updatedGiver
-          solveFirst { moves: commandTail, stacks: updatedLayout } part2 # pure
+          solve { moves: commandTail, stacks: updatedLayout } part2 # pure
           # fromMaybe "failed"
 
 -- Part 1
@@ -92,7 +91,7 @@ part1 =
     readP1 =
       do
         inputs <- parseInput "inputs/day5.txt"
-        solveFirst inputs false # pure
+        solve inputs false # pure
 
   in
     unsafePerformEffect readP1
@@ -104,7 +103,7 @@ part2 =
     readP2 =
       do
         inputs <- parseInput "inputs/day5.txt"
-        solveFirst inputs true # pure
+        solve inputs true # pure
 
   in
     unsafePerformEffect readP2

@@ -14,3 +14,6 @@ foldSum fun inputs = Array.foldl (\acc x -> acc + fun x) 0 inputs
 
 getInput :: String -> Effect (Array String)
 getInput path = (readTextFile UTF8 >=> trim >>> lines >>> pure) path
+
+getInputStr :: String -> Effect String
+getInputStr path = (readTextFile UTF8 >=> trim >>> pure) path
