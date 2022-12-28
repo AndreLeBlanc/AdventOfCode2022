@@ -10,24 +10,15 @@ import Data.String.Regex (match)
 import Data.String.Regex.Flags (global)
 import Data.String.Regex.Unsafe (unsafeRegex)
 import Data.String.Utils (lines, toCharArray)
-import Data.Traversable (traverse)
 import Effect (Effect)
 import Effect.Unsafe (unsafePerformEffect)
+import Lib (transpose)
 import Node.Encoding (Encoding(..))
 import Node.FS.Sync (readTextFile)
 
 type Operation = { num :: Int, source :: Int, destination :: Int }
 
 type Rearrangement = { stacks :: Array (Array String), moves :: Array Operation }
-
-transpose :: forall a. Array (Array a) -> Array (Array a)
-transpose = go mempty
-  where
-  go :: Array (Array a) -> Array (Array a) -> Array (Array a)
-  go acc xs =
-    case traverse head xs of
-      Nothing -> acc
-      Just heads -> go (snoc acc heads) (map (drop 1) xs)
 
 parseStacks :: String -> Array String
 parseStacks = go mempty <<< toCharArray
