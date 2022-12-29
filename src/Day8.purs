@@ -9,7 +9,7 @@ import Data.Maybe (Maybe(..))
 import Data.Foldable (maximum)
 import Data.String.CodeUnits (toCharArray)
 import Effect.Unsafe (unsafePerformEffect)
-import Lib (getInput, subLen, transpose)
+import Lib (getInput, subLen, transpose, Part(..))
 
 visibleRow :: Array Int -> Array Boolean
 visibleRow row =
@@ -51,7 +51,6 @@ part1 =
       do
         inputs <- getInput "inputs/day8.txt"
         countTrees inputs # pure
-
   in
     unsafePerformEffect readP1
       # show
@@ -88,8 +87,21 @@ part2 =
     readP2 =
       do
         inputs <- getInput "inputs/day8.txt"
-        countSightline inputs #  pure
+        countSightline inputs # pure
 
   in
     unsafePerformEffect readP2
+      # show
+
+solve :: Part -> String
+solve part =
+  let
+    doPart =
+      do
+        inputs <- getInput "inputs/day8.txt"
+        case part of
+          First -> countTrees inputs # pure
+          Second -> countSightline inputs # fromMaybe 0 # pure
+  in
+    unsafePerformEffect doPart
       # show

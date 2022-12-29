@@ -1,21 +1,18 @@
-module Day3 where
+module Day3
+  ( rowScore
+  , solve
+  , triplets
+  ) where
 
 import Prelude
 
 import Data.Array as Array
 import Data.Char (toCharCode)
-import Data.Maybe (Maybe, fromMaybe)
+import Data.Maybe (fromMaybe)
 import Data.String as String
 import Data.String.CodeUnits (toCharArray)
-import Data.String.Common (trim)
-import Data.String.Utils (lines)
-import Effect (Effect)
 import Effect.Unsafe (unsafePerformEffect)
-import Node.Encoding (Encoding(..))
-import Node.FS.Sync (readTextFile)
-
-getInput :: Effect (Array String)
-getInput = (readTextFile UTF8 >=> trim >>> lines >>> pure) "inputs/day3.txt"
+import Lib (Part(..), getInput)
 
 prioritityVal :: Char -> Int
 prioritityVal charVal =
@@ -38,18 +35,6 @@ rowScore sum row =
         pure res
   in
     score # fromMaybe 0
-
-part1 :: String
-part1 =
-  let
-    readP1 =
-      do
-        inputs <- getInput
-        pure (Array.foldl rowScore 0 inputs)
-
-  in
-    unsafePerformEffect readP1
-      # show
 
 triplets :: Array String -> Int -> Int
 triplets rows sum =
@@ -78,14 +63,15 @@ triplets rows sum =
           # triplets three.after
       _ -> sum
 
-part2 :: String
-part2 =
+solve :: Part -> String
+solve part =
   let
-    readP2 =
+    doPart =
       do
-        inputs <- getInput
-        pure (triplets inputs 0)
+        inputs <- getInput "inputs/day3.txt"
+        case part of
+          First -> pure (Array.foldl rowScore 0 inputs)
+          Second -> pure (triplets inputs 0)
   in
-    unsafePerformEffect readP2
+    unsafePerformEffect doPart
       # show
-

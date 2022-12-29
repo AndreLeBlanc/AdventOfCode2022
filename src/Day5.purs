@@ -12,7 +12,7 @@ import Data.String.Regex.Unsafe (unsafeRegex)
 import Data.String.Utils (lines, toCharArray)
 import Effect (Effect)
 import Effect.Unsafe (unsafePerformEffect)
-import Lib (transpose)
+import Lib (transpose, Part(..))
 import Node.Encoding (Encoding(..))
 import Node.FS.Sync (readTextFile)
 
@@ -56,11 +56,11 @@ parseInput path =
     }
       # pure
 
-solve :: Rearrangement -> Boolean -> String
-solve job part2 =
+moveCreates :: Rearrangement -> Part -> String
+moveCreates job part =
   let
     reversePart2 :: Array String -> Array String
-    reversePart2 arr = if part2 then arr else reverse arr
+    reversePart2 arr = if (part == Second) then arr else reverse arr
   in
     case job.moves of
       [] -> foldr (\stack acc -> (fromMaybe "" (head stack)) <> acc) "" job.stacks
@@ -72,30 +72,17 @@ solve job part2 =
           let giver = splitAt command.num donor
           updatedGiver <- updateAt command.source giver.after job.stacks
           updatedLayout <- updateAt command.destination ((reversePart2 giver.before) <> reciever) updatedGiver
-          solve { moves: commandTail, stacks: updatedLayout } part2 # pure
+          moveCreates { moves: commandTail, stacks: updatedLayout } part # pure
           # fromMaybe "failed"
 
--- Part 1
-part1 :: String
-part1 =
+solve :: Part -> String
+solve part =
   let
-    readP1 =
+    doPart =
       do
         inputs <- parseInput "inputs/day5.txt"
-        solve inputs false # pure
+        moveCreates inputs part # pure
 
   in
-    unsafePerformEffect readP1
-      # show
-
-part2 :: String
-part2 =
-  let
-    readP2 =
-      do
-        inputs <- parseInput "inputs/day5.txt"
-        solve inputs true # pure
-
-  in
-    unsafePerformEffect readP2
+    unsafePerformEffect doPart
       # show

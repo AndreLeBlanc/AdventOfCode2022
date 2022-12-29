@@ -2,13 +2,13 @@ module Day6 where
 
 import Prelude
 
-import Data.Array (elem, foldl, length)
+import Data.Array (elem)
 import Data.Int (toStringAs, decimal)
 import Data.Set (fromFoldable, size)
 import Data.String (take, drop)
 import Data.String.CodeUnits (toCharArray)
 import Effect.Unsafe (unsafePerformEffect)
-import Lib (getInputStr)
+import Lib (getInputStr, Part(..))
 
 findPaketStart :: Int -> String -> String
 findPaketStart pos signal =
@@ -31,26 +31,15 @@ findMessageStart pos signal =
       true -> toStringAs decimal (pos + 1)
       false -> findMessageStart (pos + 1) (drop 1 signal)
 
-part1 :: String
-part1 =
+solve :: Part -> String
+solve part =
   let
-    readP1 =
+    doPart =
       do
         inputs <- getInputStr "inputs/day6.txt"
-        findPaketStart 3 inputs # pure
-
+        case part of
+          First -> findPaketStart 3 inputs # pure
+          Second -> findMessageStart 13 inputs # pure
   in
-    unsafePerformEffect readP1
-      # show
-
-part2 :: String
-part2 =
-  let
-    readP2 =
-      do
-        inputs <- getInputStr "inputs/day6.txt"
-        findMessageStart 13 inputs # pure
-
-  in
-    unsafePerformEffect readP2
+    unsafePerformEffect doPart
       # show

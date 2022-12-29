@@ -2,18 +2,18 @@ module Day9 where
 
 import Prelude
 
-import Data.Array (foldl, snoc)
+import Data.Array (foldl, head, replicate, reverse, snoc, drop)
 import Data.Int (fromString, toNumber)
 import Data.Maybe (fromMaybe)
 import Data.Number (abs)
 import Data.Set (fromFoldable, size)
 import Data.String (splitAt)
 import Effect.Unsafe (unsafePerformEffect)
-import Lib (getInput, dec)
+import Lib (getInput, dec, Part(..))
 
 type Coordinate = { x :: Int, y :: Int }
 
-type Rope = { head :: Coordinate, tail :: Coordinate, been :: Array Coordinate }
+type Rope = { head :: Coordinate, tail :: Array Coordinate, been :: Array (Array Coordinate) }
 
 dist :: Int -> Int -> Int
 dist head tail | tail < head = tail + 1
@@ -26,13 +26,20 @@ move rope { x: x, y: y } =
     step 0 = 0
     step d = if d > 0 then 1 else -1
     newHead = { x: rope.head.x + (step x), y: rope.head.y + (step y) }
-    newTail = { x: dist newHead.x rope.tail.x, y: dist newHead.y rope.tail.y }
+    newTail prev curr = { x: dist prev.x curr.x, y: dist prev.y curr.y }
+    last prev = head (reverse prev) # fromMaybe { x: 0, y: 0 }
+
+    tails :: Array Coordinate -> Coordinate -> Array Coordinate
+    tails prev curr =
+      case abs (toNumber ((last prev).x - curr.x)) > 1.0 || abs (toNumber ((last prev).y - curr.y)) > 1.0 of
+        true -> snoc prev (newTail (last prev) curr)
+        false -> snoc prev curr
+
+    updateTails = foldl tails [ newHead ] rope.tail
+      # drop 1
   in
     case 1.0 <= (abs (toNumber x)) || 1.0 <= (abs (toNumber y)) of
-      true ->
-        case abs (toNumber (newHead.x - rope.tail.x)) > 1.0 || abs (toNumber (newHead.y - rope.tail.y)) > 1.0 of
-          true -> move { head: newHead, tail: newTail, been: snoc rope.been newTail } { x: dec x, y: dec y }
-          false -> move { head: newHead, tail: rope.tail, been: rope.been } { x: dec x, y: dec y }
+      true -> move { head: newHead, tail: updateTails, been: snoc rope.been updateTails   } { x: dec x, y: dec y }
       _ -> rope
 
 performMove :: Rope -> String -> Rope
@@ -48,24 +55,25 @@ performMove rope mov =
 
 sizer :: Rope -> Int
 sizer r =
-  fromFoldable r.been
+  map (\x -> head (reverse x) # fromMaybe { x: 0, y: 0 }) r.been 
+    # fromFoldable
     # size
 
-moves :: Array String -> Int
-moves mov =
-  foldl performMove { head: { x: 0, y: 0 }, tail: { x: 0, y: 0 }, been: [ { x: 0, y: 0 } ] } mov
+moves :: Array String -> Int -> Int
+moves mov size =
+  foldl performMove { head: { x: 0, y: 0 }, tail: replicate size { x: 0, y: 0 }, been: [[ { x: 0, y: 0 } ]] } mov
     # sizer
 
-part1 :: String
-part1 =
+solve :: Part -> String
+solve part =
   let
-    readP1 =
+    doPart =
       do
         inputs <- getInput "inputs/day9.txt"
-        moves inputs # pure
+        case part of
+         First -> moves inputs 1 # pure
+         Second -> moves inputs 9 # pure
 
   in
-    unsafePerformEffect readP1
+    unsafePerformEffect doPart
       # show
-
-part2 = "todo"

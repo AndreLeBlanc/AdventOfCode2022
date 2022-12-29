@@ -32,6 +32,8 @@ to generate this file without the comments in this block.
   , "profunctor"
   , "strings"
   , "stringutils"
+  , "tuples"
+  , "test-unit"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]

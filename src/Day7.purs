@@ -4,7 +4,7 @@ import Prelude
 
 import Data.Array (head)
 import Effect.Unsafe (unsafePerformEffect)
-import Lib (getInputStr)
+import Lib (getInputStr, Part(..))
 
 newtype Directory = Directory { size :: Int, subDirs :: Array Directory }
 
@@ -13,15 +13,15 @@ newtype Directory = Directory { size :: Int, subDirs :: Array Directory }
 --     case head input of
 -- 
 --     _ -> 
-
-part1 :: String
-part1 = "todo"
---  let
---    readP1 =
---      do
---        inputs <- getInputStr "inputs/day7.txt"
---        parseCommands inputs # pure
---
---  in
---    unsafePerformEffect readP1
---      # show
+solve :: Part -> String
+solve part =
+  let
+    doPart =
+      do
+        inputs <- getInputStr "inputs/day6.txt"
+        case part of
+          First -> "todo" # pure
+          Second -> "todo" # pure
+  in
+    unsafePerformEffect doPart
+      # show

@@ -11,23 +11,41 @@ import Day3 as Day3
 import Day4 as Day4
 import Day5 as Day5
 import Day6 as Day6
+import Day7 as Day7
 import Day8 as Day8
 import Day9 as Day9
+import Day10 as Day10
 import Effect (Effect)
 import Effect.Console (log)
 import Node.Process (argv)
+import Lib (Part(..), Parts(..))
+import Data.Map (fromFoldable, lookup, Map)
+import Data.Tuple (Tuple(..))
 
 type Year = Int
 type Day = Int
-data Part = NoPart | First | Second
 
-data Command = Advent Year Day Part
+data Command = Advent Year Day Parts
 
-toPart :: Maybe Int -> Part
+days ∷ Map Int (Part → String)
+days = fromFoldable
+  [ Tuple 1 Day1.solve
+  , Tuple 2 Day2.solve
+  , Tuple 3 Day3.solve
+  , Tuple 4 Day4.solve
+  , Tuple 5 Day5.solve
+  , Tuple 6 Day6.solve
+  , Tuple 7 Day7.solve
+  , Tuple 8 Day8.solve
+  , Tuple 9 Day9.solve
+  , Tuple 10 Day10.solve
+  ]
+
+toPart :: Maybe Int -> Parts
 toPart partNum =
   case partNum of
-    Just 1 -> First
-    Just 2 -> Second
+    Just 1 -> Single First
+    Just 2 -> Single Second
     _ -> NoPart
 
 parseArgs :: Array String -> Maybe Command
@@ -38,40 +56,24 @@ parseArgs args =
     let part = (Int.fromString =<< Array.index args 2) # toPart
     Advent year day part # pure
 
+runDay :: Int -> Part -> String
+runDay day part =
+  case lookup day days of
+    Nothing -> "day not implemented"
+    Just solver -> solver part
+
 runCommand :: Array String -> String
 runCommand args =
   do
     let commandArgs = Array.drop 2 args
     command <- parseArgs commandArgs
     pure case command of
-      (Advent 2022 1 First) -> Day1.part1
-      (Advent 2022 1 Second) -> Day1.part2
-      (Advent 2022 1 NoPart) -> "part one: " <> Day1.part1 <> ", part two: " <> Day1.part2
-      (Advent 2022 2 First) -> Day2.part1
-      (Advent 2022 2 Second) -> Day2.part2
-      (Advent 2022 2 NoPart) -> "part one: " <> Day2.part1 <> ", part two: " <> Day2.part2
-      (Advent 2022 3 First) -> Day3.part1
-      (Advent 2022 3 Second) -> Day3.part2
-      (Advent 2022 3 NoPart) -> "part one: " <> Day3.part1 <> ", part two: " <> Day3.part2
-      (Advent 2022 4 First) -> Day4.part1
-      (Advent 2022 4 Second) -> Day4.part2
-      (Advent 2022 4 NoPart) -> "part one: " <> Day4.part1 <> ", part two: " <> Day4.part2
-      (Advent 2022 5 First) -> Day5.part1
-      (Advent 2022 5 Second) -> Day5.part2
-      (Advent 2022 5 NoPart) -> "part one: " <> Day5.part1 <> ", part two: " <> Day5.part2
-      (Advent 2022 6 First) -> Day6.part1
-      (Advent 2022 6 Second) -> Day6.part2
-      (Advent 2022 6 NoPart) -> "part one: " <> Day6.part1 <> ", part two: " <> Day6.part2
-      (Advent 2022 8 First) -> Day8.part1
-      (Advent 2022 8 Second) -> Day8.part2
-      (Advent 2022 8 NoPart) -> "part one: " <> Day8.part1 <> ", part two: " <> Day8.part2
-      (Advent 2022 9 First) -> Day9.part1
-      (Advent 2022 9 Second) -> Day9.part2
-      (Advent 2022 9 NoPart) -> "part one: " <> Day9.part1 <> ", part two: " <> Day9.part2
+      (Advent 2022 day (Single part)) -> runDay day part
+      (Advent 2022 day NoPart) -> "part one: " <> runDay day First <> ", part two: " <> runDay day Second
       _ -> "Didn't find instance of command"
     # fromMaybe "couldn't parse command"
 
 main :: Effect Unit
 main = do
   args <- argv
-  log $ show (runCommand args)
+  log (runCommand args)

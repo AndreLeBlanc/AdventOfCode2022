@@ -5,48 +5,38 @@ import Prelude
 import Data.Array as Array
 import Data.Int as Int
 import Data.Maybe (fromMaybe)
-import Data.String.Utils (lines)
-import Effect (Effect)
 import Effect.Unsafe (unsafePerformEffect)
-import Node.Encoding (Encoding(..))
-import Node.FS.Sync (readTextFile)
+import Lib (Part(..), getInput)
 
-sumRows :: { sums :: Array Int, ints :: Int } -> String -> { sums :: Array Int, ints :: Int }
+type CarriedCals = { sums :: Array Int, ints :: Int }
+
+sumRows :: CarriedCals -> String -> CarriedCals
 sumRows { sums, ints } row =
   case row of
     "" -> { sums: (Array.cons ints sums), ints: 0 }
     str -> { sums, ints: ints + (Int.fromString str # fromMaybe 0) }
 
-getInput :: Effect (Array Int)
-getInput =
-  do
-    raw <- readTextFile UTF8 "inputs/day1.txt"
-    let inputRows = lines raw
-    let sums = Array.foldl sumRows { sums: [], ints: 0 } inputRows
-    pure sums.sums
+calories :: Array String -> Array Int
+calories inputRows =
+  (Array.foldl sumRows { sums: [], ints: 0 } inputRows).sums
 
-part1 :: String
-part1 =
+solve :: Part -> String
+solve part =
   let
-    readP1 =
+    doPart =
       do
-        inputs <- getInput
-        pure (Array.foldl max 0 inputs)
+        inputs <- getInput "inputs/day1.txt"
+        case part of
+          First -> calories inputs
+            # Array.foldl max 0
+            # pure
+          Second ->
+            calories inputs
+              # Array.sort
+              # Array.reverse
+              # Array.take 3
+              # Array.foldl (+) 0
+              # pure
   in
-    unsafePerformEffect readP1
-      # show
-
-part2 :: String
-part2 =
-  let
-    readP2 =
-      do
-        inputs <- getInput
-        let partOne = Array.sort inputs
-        pure partOne
-  in
-    unsafePerformEffect readP2
-      # Array.reverse
-      # Array.take 3
-      # Array.foldl (+) 0
+    unsafePerformEffect doPart
       # show

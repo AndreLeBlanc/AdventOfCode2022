@@ -12,12 +12,7 @@ import Effect.Unsafe (unsafePerformEffect)
 import Node.Encoding (Encoding(..))
 import Node.FS.Sync (readTextFile)
 import Data.Ord (abs)
-
-getInput :: Effect (Array String)
-getInput =
-  do
-    raw <- readTextFile UTF8 "inputs/day2.txt"
-    lines raw # pure
+import Lib (Part(..), getInput)
 
 rowScore :: Maybe Int -> String -> Maybe Int
 rowScore sum row =
@@ -29,18 +24,6 @@ rowScore sum row =
     let myChoice = toCharCode snd - 87
     let score = prev + myChoice + 3 * (abs (mod (myChoice - opponent + 1) 3))
     pure score
-
-part1 :: String
-part1 =
-  let
-    readP1 =
-      do
-        inputs <- getInput
-        pure (Array.foldl rowScore (Just 0) inputs)
-
-  in
-    unsafePerformEffect readP1
-      # show
 
 sndScore :: Maybe Int -> String -> Maybe Int
 sndScore sum row =
@@ -54,14 +37,15 @@ sndScore sum row =
     let score = prev + myChoice + 1 + 3 * res
     pure score
 
-part2 :: String
-part2 =
+solve :: Part -> String
+solve part =
   let
-    readP2 =
+    doPart =
       do
-        inputs <- getInput
-        pure (Array.foldl sndScore (Just 0) inputs)
-
+        inputs <- getInput "inputs/day2.txt"
+        case part of
+          First -> pure (Array.foldl rowScore (Just 0) inputs)
+          Second -> pure (Array.foldl sndScore (Just 0) inputs)
   in
-    unsafePerformEffect readP2
+    unsafePerformEffect doPart
       # show

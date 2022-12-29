@@ -11,6 +11,12 @@ import Effect (Effect)
 import Node.Encoding (Encoding(..))
 import Node.FS.Sync (readTextFile)
 
+data Part = First | Second
+
+derive instance Eq Part
+
+data Parts = NoPart | Single Part
+
 foldSum :: forall a. (a -> Int) -> Array a -> Int
 foldSum fun inputs = Array.foldl (\acc x -> acc + fun x) 0 inputs
 

@@ -8,11 +8,7 @@ import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String as String
 import Data.String.Pattern (Pattern(..))
 import Effect.Unsafe (unsafePerformEffect)
-import Lib (foldSum, getInput)
-
-data Part = Part1 | Part2
-
-derive instance Eq Part
+import Lib (foldSum, getInput, Part(..))
 
 rowScore :: Part -> String -> Int
 rowScore part row =
@@ -25,10 +21,10 @@ rowScore part row =
             pure
               if
                 case part of
-                  Part1 ->
+                  First ->
                     (firstStart <= secondStart && secondEnd <= firstEnd)
                       || (firstStart >= secondStart && secondEnd >= firstEnd)
-                  Part2 ->
+                  Second ->
                     (firstStart <= secondEnd && secondStart <= firstEnd) then 1
               else 0
           _ -> Nothing
@@ -40,26 +36,13 @@ rowScore part row =
       # score
       # fromMaybe 0
 
-part1 :: String
-part1 =
+solve :: Part -> String
+solve part =
   let
-    readP1 =
+    doPart =
       do
         inputs <- getInput "inputs/day4.txt"
-        pure (foldSum (rowScore Part1) inputs)
-
+        pure (foldSum (rowScore part) inputs)
   in
-    unsafePerformEffect readP1
-      # show
-
-part2 :: String
-part2 =
-  let
-    readP2 =
-      do
-        inputs <- getInput "inputs/day4.txt"
-        pure (foldSum (rowScore Part2) inputs)
-
-  in
-    unsafePerformEffect readP2
+    unsafePerformEffect doPart
       # show
