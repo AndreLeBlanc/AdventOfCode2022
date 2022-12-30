@@ -1,8 +1,4 @@
-module Day3
-  ( rowScore
-  , solve
-  , triplets
-  ) where
+module Day3 where
 
 import Prelude
 

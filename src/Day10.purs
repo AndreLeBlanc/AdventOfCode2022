@@ -1,11 +1,4 @@
-module Day10
-  ( Signal
-  , display
-  , execute
-  , moves
-  , printer
-  , solve
-  ) where
+module Day10 where
 
 import Prelude
 
