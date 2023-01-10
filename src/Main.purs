@@ -15,6 +15,7 @@ import Day7 as Day7
 import Day8 as Day8
 import Day9 as Day9
 import Day10 as Day10
+import Day11 as Day11
 import Effect (Effect)
 import Effect.Console (log)
 import Node.Process (argv)
@@ -39,6 +40,7 @@ days = fromFoldable
   , Tuple 8 Day8.solve
   , Tuple 9 Day9.solve
   , Tuple 10 Day10.solve
+  , Tuple 11 Day11.solve
   ]
 
 toPart :: Maybe Int -> Parts

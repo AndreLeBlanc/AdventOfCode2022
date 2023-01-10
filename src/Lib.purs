@@ -3,7 +3,7 @@ module Lib where
 import Prelude
 
 import Data.Array as Array
-import Data.Maybe (Maybe(..))
+import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String.Common (trim)
 import Data.String.Utils (lines)
 import Data.Traversable (traverse)
@@ -25,6 +25,12 @@ getInput path = (readTextFile UTF8 >=> trim >>> lines >>> pure) path
 
 getInputStr :: String -> Effect String
 getInputStr path = (readTextFile UTF8 >=> trim >>> pure) path
+
+group :: forall a. Int -> Array a -> Array (Array a)
+group _ [] = []
+group n l
+  | n > 0 =  [(Array.take n l)] <> ((group n (Array.drop n l))) 
+  | otherwise = []
 
 transpose :: forall a. Array (Array a) -> Array (Array a)
 transpose = go mempty
