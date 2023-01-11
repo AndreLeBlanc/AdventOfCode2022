@@ -32,7 +32,7 @@ main =
           $ "part one: \"1707\", part two: \"3697\""
       test "day 7" do
         Assert.equal (runCommand [ "", "", "2022", "7" ])
-          $ "part one: \"todo\", part two: \"todo\""
+          $ "part one: 1334506.0, part two: 7421137.0"
       test "day 8" do
         Assert.equal (runCommand [ "", "", "2022", "8" ])
           $ "part one: 1736, part two: 268800"
@@ -41,11 +41,12 @@ main =
           $ "part one: 6503, part two: 2724"
       test "day 10" do
         Assert.equal (runCommand [ "", "", "2022", "10" ])
-          $ "part one: \"14720\", part two: \
-          \\"#### #### ###  ###  ###  #### #### #### \ 
-            \#       # #  # #  # #  # #       # #    \ 
-            \###    #  ###  #  # ###  ###    #  ###  \ 
-            \#     #   #  # ###  #  # #     #   #    \ 
-            \#    #    #  # #    #  # #    #    #    \ 
+          $
+            "part one: \"14720\", part two: \
+            \\"#### #### ###  ###  ###  #### #### #### \
+            \#       # #  # #  # #  # #       # #    \
+            \###    #  ###  #  # ###  ###    #  ###  \
+            \#     #   #  # ###  #  # #     #   #    \
+            \#    #    #  # #    #  # #    #    #    \
             \#    #### ###  #    ###  #    #### #    \""
 

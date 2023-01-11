@@ -29,7 +29,7 @@ getInputStr path = (readTextFile UTF8 >=> trim >>> pure) path
 group :: forall a. Int -> Array a -> Array (Array a)
 group _ [] = []
 group n l
-  | n > 0 =  [(Array.take n l)] <> ((group n (Array.drop n l))) 
+  | n > 0 = [ (Array.take n l) ] <> ((group n (Array.drop n l)))
   | otherwise = []
 
 transpose :: forall a. Array (Array a) -> Array (Array a)
@@ -48,3 +48,12 @@ dec :: Int -> Int
 dec x | x > 0 = x - 1
 dec x | x < 0 = x + 1
 dec x = x
+
+tails :: forall a. Array a -> Array (Array a)
+tails xs = go (pure xs) xs
+  where
+  go :: Array (Array a) -> Array a -> Array (Array a)
+  go acc ys =
+    case Array.drop 1 ys of
+      [] -> acc
+      rest -> go (Array.cons rest acc) rest
